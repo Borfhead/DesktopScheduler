@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1" fx:controller="desktopscheduler.view.DesktopSchedulerController">
+<AnchorPane id="AnchorPane" prefHeight="639.0" prefWidth="937.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="desktopscheduler.view.DesktopSchedulerController">
    <children>
-      <Label layoutX="249.0" layoutY="160.0" text="You have logged in" />
+      <MenuBar id="menuBar" layoutX="-6.0" layoutY="1.0" prefHeight="26.0" prefWidth="949.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Customers">
+            <items>
+              <MenuItem id="addCustomerItem" mnemonicParsing="false" onAction="#addCustomerSelected" text="Add" />
+                  <MenuItem id="modifyCustomerItem" mnemonicParsing="false" onAction="#modifyCustomerSelected" text="Modify/Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Reports">
+            <items>
+              <MenuItem id="generateReportItem" mnemonicParsing="false" onAction="#generateReportSelected" text="Generate Report" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="No" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
    </children>
 </AnchorPane>

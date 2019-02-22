@@ -32,6 +32,8 @@ public class LoginController implements Initializable {
     @FXML TextField passwordField;
     @FXML Button loginBtn;
     @FXML Button cancelBtn;
+    
+    ResourceBundle bundle;
 
     
     
@@ -51,7 +53,7 @@ public class LoginController implements Initializable {
         else{
             Alert authFail = new Alert(AlertType.ERROR);
             authFail.setTitle("");
-            authFail.setHeaderText("Invalid Username/Password");
+            authFail.setHeaderText(bundle.getString("failedauth"));
             authFail.setContentText("");
             authFail.showAndWait();
         }
@@ -64,7 +66,7 @@ public class LoginController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        ResourceBundle bundle = ResourceBundle.getBundle("desktopscheduler.view/Login", Locale.getDefault());
+        bundle = ResourceBundle.getBundle("desktopscheduler.view/Login", Locale.getDefault());
         userNameField.setPromptText(bundle.getString("username"));
         passwordField.setPromptText(bundle.getString("password"));
         loginBtn.setText(bundle.getString("login"));

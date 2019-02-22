@@ -5,9 +5,21 @@
  */
 package desktopscheduler.view;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+
 
 /**
  * FXML Controller class
@@ -16,6 +28,38 @@ import javafx.fxml.Initializable;
  */
 public class DesktopSchedulerController implements Initializable {
 
+    @FXML MenuItem addCustomerItem;
+    @FXML MenuItem modifyCustomerItem;
+    @FXML MenuItem generateReportItem;
+    @FXML MenuBar menuBar;
+    
+    @FXML
+    private void addCustomerSelected(ActionEvent event) throws IOException{
+        Parent root = FXMLLoader.load(getClass().getResource("AddCustomer.fxml"));
+        showNewScene(root);
+    }
+    
+    @FXML
+    private void modifyCustomerSelected(ActionEvent event) throws IOException{
+        Parent root = FXMLLoader.load(getClass().getResource("ModifyCustomer.fxml"));
+        showNewScene(root);
+    }
+    
+    @FXML
+    private void generateReportSelected(ActionEvent event) throws IOException{
+        Parent root = FXMLLoader.load(getClass().getResource("GenerateReport.fxml"));
+        showNewScene(root);
+    }
+    
+    private void showNewScene(Parent root){
+        Scene scene = new Scene(root);
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.centerOnScreen();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.showAndWait();
+    }
+    
     /**
      * Initializes the controller class.
      */
