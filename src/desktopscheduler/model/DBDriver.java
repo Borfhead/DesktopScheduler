@@ -13,12 +13,6 @@ public class DBDriver {
     private static final String URL = "jdbc:mysql://52.206.157.109/U05AXu";
     private static final String USER = "U05AXu";
     private static final String PASS = "53688446515";
-//        try(Connection conn = DriverManager.getConnection(url, user, pass)){
-//            System.out.println(conn);
-//        }
-//        catch(SQLException e){
-//            System.out.println("Didn't work");
-//        }
     
     public static boolean authenticate(String userName, String password){
         try(Connection conn = DriverManager.getConnection(URL, USER, PASS)){
@@ -30,8 +24,47 @@ public class DBDriver {
             }
         }
         catch(SQLException e){
-            
+            System.out.println(e);
         }
         return false;
+    }
+    
+    public static boolean insertAddress(String address, String address2, int cityId, String postal, String phone){
+        try(Connection conn = DriverManager.getConnection(URL, USER, PASS)){
+            Statement stmt = conn.createStatement();
+            String query = String.format("INSERT IGNORE INTO address(address, address2, cityId, postalCode, phone) "
+                    + "VALUES("
+                    + "'%s', '%s', '%x', '%s', '%s')", address, address2, cityId, postal, phone);
+            stmt.executeUpdate(query);
+            return true;
+        }
+        catch(SQLException e){
+            System.out.println(e);
+        }
+        return false;
+    }
+    
+    public static boolean insertCustomer(String name, int addressId){
+        try(Connection conn = DriverManager.getConnection(URL, USER, PASS)){
+            Statement stmt = conn.createStatement();
+            String query = String.format("INSERT IGNORE INTO customer(customerName, addressId) VALUES('%s', '%x')", name, addressId);
+            stmt.executeUpdate(query);
+            return true;
+        }
+        catch(SQLException e){
+            System.out.println(e);
+        }
+        return false;
+    }
+    
+    public static boolean insertAppointment(){
+        try(Connection conn = DriverManager.getConnection(URL, USER, PASS)){
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("");
+        }
+        catch(SQLException e){
+            System.out.println(e);
+        }
+        return true;
     }
 }

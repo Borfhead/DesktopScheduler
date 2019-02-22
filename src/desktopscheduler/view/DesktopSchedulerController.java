@@ -5,6 +5,7 @@
  */
 package desktopscheduler.view;
 
+import desktopscheduler.model.DBDriver;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -49,6 +50,12 @@ public class DesktopSchedulerController implements Initializable {
     private void generateReportSelected(ActionEvent event) throws IOException{
         Parent root = FXMLLoader.load(getClass().getResource("GenerateReport.fxml"));
         showNewScene(root);
+    }
+    
+    //Temporary test method.  Delete later
+    @FXML
+    private void testPushed(ActionEvent event){
+        
     }
     
     private void showNewScene(Parent root){
