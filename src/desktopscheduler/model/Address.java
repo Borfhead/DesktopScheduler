@@ -83,4 +83,9 @@ public class Address {
     public String getPhone(){
         return phone;
     }
+    
+    @Override
+    public String toString(){
+        return Integer.toString(addressID) +' '+ address +' '+ address2 + ' ' +postalCode+ ' ' +phone;
+    }
 }

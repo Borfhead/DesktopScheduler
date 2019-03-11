@@ -5,6 +5,8 @@
  */
 package desktopscheduler.view;
 
+import desktopscheduler.model.Address;
+import desktopscheduler.model.Customer;
 import desktopscheduler.model.DBDriver;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -23,14 +25,15 @@ import javafx.stage.Stage;
  *
  * @author Dylan
  */
-public class AddCustomerController implements Initializable {
+public class EditCustomerController implements Initializable {
 
-    @FXML TextField nameField;
-    @FXML TextField address1Field;
-    @FXML TextField address2Field;
-    @FXML ComboBox cityComboBox;
-    @FXML TextField postalField;
-    @FXML TextField phoneField;
+    @FXML private TextField nameField;
+    @FXML private TextField address1Field;
+    @FXML private TextField address2Field;
+    @FXML private ComboBox cityComboBox;
+    @FXML private TextField postalField;
+    @FXML private TextField phoneField;
+    private Customer selected;
     
     
     @FXML
@@ -54,18 +57,35 @@ public class AddCustomerController implements Initializable {
             int cityId = cityComboBox.getSelectionModel().getSelectedIndex() + 1;
             String postal = postalField.getText();
             String phone = phoneField.getText();
-            int newId = DBDriver.insertAddress(address1, address2, cityId, postal, phone);
-            if(newId == -1){
-                makeAlert("Woops... something went wrong");
+            int addrId = selected.getAddressID();
+            if(DBDriver.updateAddress(addrId, address1, address2, cityId, postal, phone)){
+                if(DBDriver.updateCustomer(selected.getCustomerID(), name, addrId)){
+                    Alert a = new Alert(AlertType.INFORMATION);
+                    a.setTitle("Success");
+                    a.setHeaderText("Changes Saved Successfully");
+                    a.setContentText("");
+                    a.showAndWait();
+                    closeWindow();
+                }
+                else{
+                    makeAlert("Failed to update customer");
+                }
             }
-            else if(DBDriver.insertCustomer(name, newId)){
-                Alert a = new Alert(AlertType.INFORMATION);
-                a.setTitle("Success");
-                a.setHeaderText("Customer has been added successfully");
-                a.setContentText("");
-                a.showAndWait();
-                closeWindow();
+            else{
+                makeAlert("Failed to update address");
             }
+            
+//            if(addrId == -1){
+//                makeAlert("Woops... something went wrong");
+//            }
+//            else if(DBDriver.updateCustomer(selected.getCustomerID(), name, addrId)){
+//                Alert a = new Alert(AlertType.INFORMATION);
+//                a.setTitle("Success");
+//                a.setHeaderText("Changes Saved Successfully");
+//                a.setContentText("");
+//                a.showAndWait();
+//                closeWindow();
+//            }
             
         }
         
@@ -96,6 +116,17 @@ public class AddCustomerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cityComboBox.setItems(FXCollections.observableArrayList("New York, New York", "Phoenix, Arizona", "London, England"));
-        cityComboBox.getSelectionModel().selectFirst();
-    }    
+    }
+    
+    public void initSelectedCustomer(Customer selected){
+        this.selected = selected;
+        Address address = DBDriver.getAddress(selected.getAddressID());
+        nameField.setText(selected.getCustomerName());
+        address1Field.setText(address.getAddress());
+        address2Field.setText(address.getAddress2());
+        cityComboBox.getSelectionModel().select(address.getCityID() - 1);
+        postalField.setText(address.getPostalCode());
+        phoneField.setText(address.getPhone());
+        
+    }
 }

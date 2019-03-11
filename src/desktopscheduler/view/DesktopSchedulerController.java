@@ -5,6 +5,7 @@
  */
 package desktopscheduler.view;
 
+import desktopscheduler.model.Customer;
 import desktopscheduler.model.DBDriver;
 import java.io.IOException;
 import java.net.URL;
@@ -37,19 +38,19 @@ public class DesktopSchedulerController implements Initializable {
     @FXML
     private void addCustomerSelected(ActionEvent event) throws IOException{
         Parent root = FXMLLoader.load(getClass().getResource("AddCustomer.fxml"));
-        showNewScene(root);
+        showNewScene(root, "Add Customer");
     }
     
     @FXML
     private void modifyCustomerSelected(ActionEvent event) throws IOException{
         Parent root = FXMLLoader.load(getClass().getResource("ModifyCustomer.fxml"));
-        showNewScene(root);
+        showNewScene(root, "Modify/Delete Customer");
     }
     
     @FXML
     private void generateReportSelected(ActionEvent event) throws IOException{
         Parent root = FXMLLoader.load(getClass().getResource("GenerateReport.fxml"));
-        showNewScene(root);
+        showNewScene(root, "Reports");
     }
     
     //Temporary test method.  Delete later
@@ -58,12 +59,13 @@ public class DesktopSchedulerController implements Initializable {
         
     }
     
-    private void showNewScene(Parent root){
+    public static void showNewScene(Parent root, String title){
         Scene scene = new Scene(root);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.centerOnScreen();
         stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setTitle(title);
         stage.showAndWait();
     }
     

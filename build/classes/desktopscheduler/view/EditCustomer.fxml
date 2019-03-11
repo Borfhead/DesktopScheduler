@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" prefHeight="472.0" prefWidth="528.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="desktopscheduler.view.AddCustomerController">
+<AnchorPane id="AnchorPane" prefHeight="472.0" prefWidth="528.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="desktopscheduler.view.EditCustomerController">
    <children>
       <TextField fx:id="nameField" layoutX="192.0" layoutY="97.0" prefHeight="35.0" prefWidth="149.0" promptText="Name" />
       <TextField fx:id="address1Field" layoutX="192.0" layoutY="145.0" prefHeight="35.0" prefWidth="149.0" promptText="Address 1" />

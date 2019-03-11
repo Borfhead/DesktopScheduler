@@ -49,4 +49,9 @@ public class Customer {
     public int getAddressID(){
         return addressID;
     }
+    
+    @Override
+    public String toString(){
+        return customerName +" cusID: "+ Integer.toString(customerID) +" addID: "+ Integer.toString(addressID);
+    }
 }

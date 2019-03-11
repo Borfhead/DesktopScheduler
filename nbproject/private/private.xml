@@ -3,12 +3,13 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Dylan/Documents/NetBeansProjects/DesktopScheduler/src/desktopscheduler/view/Login.fxml</file>
-            <file>file:/C:/Users/Dylan/Documents/NetBeansProjects/DesktopScheduler/src/desktopscheduler/view/LoginController.java</file>
-            <file>file:/C:/Users/Dylan/Documents/NetBeansProjects/DesktopScheduler/src/desktopscheduler/view/DesktopScheduler.fxml</file>
-            <file>file:/C:/Users/Dylan/Documents/NetBeansProjects/DesktopScheduler/src/desktopscheduler/view/DesktopScheduler.java</file>
+            <file>file:/C:/Users/Dylan/Documents/NetBeansProjects/DesktopScheduler/src/desktopscheduler/view/AddCustomerController.java</file>
+            <file>file:/C:/Users/Dylan/Documents/NetBeansProjects/DesktopScheduler/src/desktopscheduler/view/EditCustomerController.java</file>
+            <file>file:/C:/Users/Dylan/Documents/NetBeansProjects/DesktopScheduler/src/desktopscheduler/model/Customer.java</file>
             <file>file:/C:/Users/Dylan/Documents/NetBeansProjects/DesktopScheduler/src/desktopscheduler/view/DesktopSchedulerController.java</file>
+            <file>file:/C:/Users/Dylan/Documents/NetBeansProjects/DesktopScheduler/src/desktopscheduler/view/ModifyCustomerController.java</file>
             <file>file:/C:/Users/Dylan/Documents/NetBeansProjects/DesktopScheduler/src/desktopscheduler/model/DBDriver.java</file>
+            <file>file:/C:/Users/Dylan/Documents/NetBeansProjects/DesktopScheduler/src/desktopscheduler/model/Address.java</file>
         </group>
     </open-files>
 </project-private>

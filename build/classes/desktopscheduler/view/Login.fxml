@@ -6,9 +6,9 @@
 
 <AnchorPane id="AnchorPane" prefHeight="266.0" prefWidth="410.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="desktopscheduler.view.LoginController">
     <children>
-        <Button fx:id="loginBtn" layoutX="110.0" layoutY="173.0" onAction="#loginBtnPressed" prefHeight="26.0" prefWidth="97.0" text="Login" />
-      <Button fx:id="cancelBtn" layoutX="250.0" layoutY="172.0" mnemonicParsing="false" onAction="#cancelButtonPressed" prefHeight="26.0" prefWidth="98.0" text="Cancel" />
       <TextField fx:id="userNameField" layoutX="110.0" layoutY="50.0" prefHeight="26.0" prefWidth="189.0" promptText="Username" />
       <TextField fx:id="passwordField" layoutX="110.0" layoutY="88.0" prefHeight="26.0" prefWidth="190.0" promptText="Password" />
+        <Button fx:id="loginBtn" layoutX="110.0" layoutY="173.0" onAction="#loginBtnPressed" prefHeight="26.0" prefWidth="97.0" text="Login" />
+      <Button fx:id="cancelBtn" layoutX="250.0" layoutY="172.0" mnemonicParsing="false" onAction="#cancelButtonPressed" prefHeight="26.0" prefWidth="98.0" text="Cancel" />
     </children>
 </AnchorPane>
