@@ -1,0 +1,30 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Mar 12, 2019, 10:41:23 AM
+    Author     : Dylan
+*/
+
+
+.dayInMonth{
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-radius: 0;
+    -fx-border-width: 1;
+    -fx-alignment: TOP_LEFT;
+}
+
+.dayInMonth:hover{
+    -fx-background-color: lightgray;
+}
+
+.dayInMonth:selected{
+    -fx-background-color: lightblue;
+}
+
+.dayInMonth:disabled{
+    -fx-background-color: gray;
+}

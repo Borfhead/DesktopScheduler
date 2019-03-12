@@ -25,6 +25,7 @@ public class DesktopScheduler extends Application {
         
         stage.setTitle("Desktop Scheduler");
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 

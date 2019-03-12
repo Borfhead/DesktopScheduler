@@ -5,11 +5,11 @@
  */
 package desktopscheduler.view;
 
-import desktopscheduler.model.Customer;
-import desktopscheduler.model.DBDriver;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +18,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -30,10 +32,12 @@ import javafx.stage.Stage;
  */
 public class DesktopSchedulerController implements Initializable {
 
-    @FXML MenuItem addCustomerItem;
-    @FXML MenuItem modifyCustomerItem;
-    @FXML MenuItem generateReportItem;
-    @FXML MenuBar menuBar;
+    @FXML private MenuItem addCustomerItem;
+    @FXML private MenuItem modifyCustomerItem;
+    @FXML private MenuItem generateReportItem;
+    @FXML private MenuBar menuBar;
+    @FXML private BorderPane mainPane;
+    private AnchorPane monthlyPane;
     
     @FXML
     private void addCustomerSelected(ActionEvent event) throws IOException{
@@ -69,12 +73,28 @@ public class DesktopSchedulerController implements Initializable {
         stage.showAndWait();
     }
     
+    public void displayMonthly(){
+        mainPane.setCenter(monthlyPane);
+    }
+    
+    public void displayWeekly(){
+        
+    }
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+        monthlyPane = new AnchorPane();
+        
+        try {
+            monthlyPane = FXMLLoader.load(getClass().getResource("CalendarMonthlyPane.fxml"));
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        displayMonthly();
+    }
+    
     
 }
