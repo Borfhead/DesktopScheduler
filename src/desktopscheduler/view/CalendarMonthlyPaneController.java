@@ -13,6 +13,7 @@ import java.time.*;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -23,6 +24,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -89,8 +91,22 @@ public class CalendarMonthlyPaneController implements Initializable {
     
     @FXML
     private void deleteButtonPressed(){
-        System.out.println("delete");
+        Appointment selected = (Appointment)apptTable.getSelectionModel().getSelectedItem();
+        if(selected != null){
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("");
+            alert.setHeaderText("Are you sure you want to delete this appointment?");
+            
+            Optional<ButtonType> btnPressed = alert.showAndWait();
+            if(!btnPressed.isPresent()){
+                
+            }
+            else if(btnPressed.get() == ButtonType.OK){
+                DBDriver.removeAppointment(selected.getApptID());
+                populateAppointments();
+            }
     }
+}
     
     @FXML
     private void modifyButtonPressed(){

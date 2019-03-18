@@ -123,6 +123,19 @@ public class DBDriver {
         return false;
     }
     
+    public static boolean removeAppointment(int apptId){
+        try(Connection conn = DriverManager.getConnection(URL, USER, PASS)){
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("DELETE FROM appointment WHERE appointmentId='" +apptId+ "'");
+            return true;
+        }
+        catch(SQLException e){
+            System.out.println(e);
+        }
+        
+        return false;
+    }
+    
     public static ArrayList<Customer> getCustomerList(){
         ArrayList<Customer> customers = new ArrayList();
         try(Connection conn = DriverManager.getConnection(URL, USER, PASS)){
