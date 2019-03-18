@@ -2,6 +2,8 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -11,7 +13,17 @@
 
 <AnchorPane id="AnchorPane" prefHeight="530.0" prefWidth="750.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/10.0.1" fx:controller="desktopscheduler.view.CalendarMonthlyPaneController">
    <children>
-      <VBox fx:id="appointmentPane" layoutX="506.0" layoutY="41.0" prefHeight="483.0" prefWidth="243.0" />
+      <VBox fx:id="appointmentPane" layoutX="506.0" layoutY="78.0" prefHeight="447.0" prefWidth="243.0">
+         <children>
+            <TableView fx:id="apptTable" prefHeight="468.0" prefWidth="243.0">
+              <columns>
+                <TableColumn fx:id="titleColumn" prefWidth="100.00006103515625" text="Title" />
+                <TableColumn fx:id="startColumn" prefWidth="74.39996337890625" text="Start" />
+                  <TableColumn fx:id="endColumn" prefWidth="69.5999755859375" text="End" />
+              </columns>
+            </TableView>
+         </children>
+      </VBox>
       <Label layoutX="590.0" layoutY="15.0" text="Appointments" />
       <Button fx:id="backButton" layoutX="25.0" layoutY="2.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="46.0" text="&lt;" />
       <Button fx:id="forwardButton" layoutX="452.0" layoutY="2.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="46.0" text="&gt;" />
@@ -42,5 +54,8 @@
       <Label layoutX="315.0" layoutY="50.0" text="Thur" />
       <Label layoutX="390.0" layoutY="50.0" text="Fri" />
       <Label layoutX="452.0" layoutY="50.0" text="Sat" />
+      <Button fx:id="addApptButton" layoutX="551.0" layoutY="37.0" mnemonicParsing="false" onAction="#addButtonPressed" text="Add" />
+      <Button fx:id="modifyApptButton" layoutX="601.0" layoutY="37.0" mnemonicParsing="false" onAction="#modifyButtonPressed" text="Modify" />
+      <Button fx:id="deleteButton" layoutX="666.0" layoutY="37.0" mnemonicParsing="false" onAction="#deleteButtonPressed" text="Delete" />
    </children>
 </AnchorPane>

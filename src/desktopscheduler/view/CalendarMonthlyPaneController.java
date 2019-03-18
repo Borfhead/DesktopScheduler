@@ -5,18 +5,30 @@
  */
 package desktopscheduler.view;
 
+import desktopscheduler.model.Appointment;
+import desktopscheduler.model.DBDriver;
+import java.io.IOException;
 import java.net.URL;
 import java.time.*;
 import java.time.format.TextStyle;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
@@ -32,10 +44,58 @@ public class CalendarMonthlyPaneController implements Initializable {
     @FXML Label monthLabel;
     @FXML Button backButton;
     @FXML Button forwardButton;
+    @FXML private Button addApptButton;
+    @FXML private Button modifyApptButton;
+    @FXML private Button deleteButton;
+    @FXML private TableView apptTable;
+    @FXML private TableColumn titleColumn;
+    @FXML private TableColumn startColumn;
+    @FXML private TableColumn endColumn;
+    
     private ToggleGroup dayGroup;
     private LocalDate selectedDate;
     private YearMonth selectedMonth;
     
+    
+    private void populateAppointments(){
+        apptTable.setItems(FXCollections.observableArrayList(DBDriver.getAppointmentList(selectedDate)));
+    }
+    
+    @FXML
+    private void addButtonPressed() throws IOException{
+        DayInMonth apptDate = (DayInMonth)dayGroup.getSelectedToggle();
+        if(apptDate == null){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("");
+            alert.setHeaderText("Please select a date");
+            alert.setContentText("");
+            alert.showAndWait();
+        }
+        else if(apptDate.getDate().getDayOfWeek().getValue() > 5){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("");
+            alert.setHeaderText("Cannot schedule appointments on weekends");
+            alert.setContentText("");
+            alert.showAndWait();
+        }
+        else{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AddAppointment.fxml"));
+            Parent root = loader.load();
+            loader.<AddAppointmentController>getController().initAppointmentDate(apptDate.getDate());
+            DesktopSchedulerController.showNewScene(root, "Add Appointment");
+            populateAppointments();
+        }
+    }
+    
+    @FXML
+    private void deleteButtonPressed(){
+        System.out.println("delete");
+    }
+    
+    @FXML
+    private void modifyButtonPressed(){
+        System.out.println("modify");
+    }
     
     private void populateGrid(){
         monthLabel.setText(selectedMonth.getMonth().getDisplayName(TextStyle.FULL, Locale.getDefault())
@@ -79,20 +139,24 @@ public class CalendarMonthlyPaneController implements Initializable {
                 calendarPane.add(temp, col, row);
                 if(row == 0 && col < startCol){
                     temp.setDisable(true);
+                    temp.setDate(null);
                 }
                 else if(date > totalDays){
                     temp.setDisable(true);
+                    temp.setDate(null);
                 }
                 else{
                     temp.setDate(selectedMonth.atDay(date));
                     temp.setText(Integer.toString(date));
                     date++;
+                    if(temp.getDate().toString().equals(LocalDate.now().toString())){
+                        dayGroup.selectToggle(temp);
+                    }
                 }
             }
         }
         
     }
-    
     
     /**
      * Initializes the controller class.
@@ -101,17 +165,43 @@ public class CalendarMonthlyPaneController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         dayGroup = new ToggleGroup();
         selectedMonth = YearMonth.now();
+        selectedDate = LocalDate.now();
+        apptTable.setPlaceholder(new Label("No Apointments"));
+        
         populateGrid();
+        populateAppointments();
+        
+        titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        startColumn.setCellValueFactory(new PropertyValueFactory<>("start"));
+        endColumn.setCellValueFactory(new PropertyValueFactory<>("end"));
         
         backButton.setOnAction(event -> {
             selectedMonth = selectedMonth.minusMonths(1);
+            selectedDate = null;
+            dayGroup.selectToggle(null);
             populateGrid();
         });
         
         forwardButton.setOnAction(event -> {
             selectedMonth = selectedMonth.plusMonths(1);
+            selectedDate = null;
+            dayGroup.selectToggle(null);
             populateGrid();
         });
+        
+        dayGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>(){
+            @Override
+            public void changed(ObservableValue<? extends Toggle> ov, Toggle oldToggle, Toggle newToggle){
+                if(dayGroup.getSelectedToggle() != null){
+                    DayInMonth temp;
+                    temp = (DayInMonth)dayGroup.getSelectedToggle();
+                    selectedDate = temp.getDate();
+                    populateAppointments();
+                }
+            }
+        });
+        
+        
     }    
     
 }

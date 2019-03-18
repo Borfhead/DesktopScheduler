@@ -5,6 +5,7 @@
  */
 package desktopscheduler.view;
 
+import desktopscheduler.model.DBDriver;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,6 +21,10 @@ public class DesktopScheduler extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
+        
+        //Uncomment to bypass login
+        DBDriver.setCurrentUserId(1);
+        root = FXMLLoader.load(getClass().getResource("DesktopScheduler.fxml"));
         
         Scene scene = new Scene(root);
         

@@ -42,7 +42,7 @@ public class LoginController implements Initializable {
         String user = userNameField.getText();
         String pass = passwordField.getText();
         
-        if(DBDriver.authenticate(user, pass)){
+        if(DBDriver.authenticate(user, pass) != -1){
             Parent root = FXMLLoader.load(getClass().getResource("DesktopScheduler.fxml"));
             Scene scene = userNameField.getScene();
             Stage stage = (Stage)scene.getWindow();

@@ -74,19 +74,6 @@ public class EditCustomerController implements Initializable {
             else{
                 makeAlert("Failed to update address");
             }
-            
-//            if(addrId == -1){
-//                makeAlert("Woops... something went wrong");
-//            }
-//            else if(DBDriver.updateCustomer(selected.getCustomerID(), name, addrId)){
-//                Alert a = new Alert(AlertType.INFORMATION);
-//                a.setTitle("Success");
-//                a.setHeaderText("Changes Saved Successfully");
-//                a.setContentText("");
-//                a.showAndWait();
-//                closeWindow();
-//            }
-            
         }
         
         

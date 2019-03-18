@@ -5,8 +5,12 @@
  */
 package desktopscheduler.view;
 
+import desktopscheduler.model.Appointment;
+import desktopscheduler.model.DBDriver;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +22,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -37,6 +43,10 @@ public class DesktopSchedulerController implements Initializable {
     @FXML private MenuItem generateReportItem;
     @FXML private MenuBar menuBar;
     @FXML private BorderPane mainPane;
+    @FXML private RadioButton monthlyToggle;
+    @FXML private RadioButton weeklyToggle;
+    private ToggleGroup viewToggle;
+    private AnchorPane weeklyPane;
     private AnchorPane monthlyPane;
     
     @FXML
@@ -57,12 +67,6 @@ public class DesktopSchedulerController implements Initializable {
         showNewScene(root, "Reports");
     }
     
-    //Temporary test method.  Delete later
-    @FXML
-    private void testPushed(ActionEvent event){
-        
-    }
-    
     public static void showNewScene(Parent root, String title){
         Scene scene = new Scene(root);
         Stage stage = new Stage();
@@ -78,7 +82,7 @@ public class DesktopSchedulerController implements Initializable {
     }
     
     public void displayWeekly(){
-        
+        mainPane.setCenter(weeklyPane);
     }
     
     /**
@@ -87,6 +91,18 @@ public class DesktopSchedulerController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         monthlyPane = new AnchorPane();
+        weeklyPane = new AnchorPane();
+        viewToggle = new ToggleGroup();
+        monthlyToggle.setToggleGroup(viewToggle);
+        weeklyToggle.setToggleGroup(viewToggle);
+        
+        monthlyToggle.selectedProperty().addListener(e -> {
+            displayMonthly();
+        });
+        
+        weeklyToggle.selectedProperty().addListener(e -> {
+            displayWeekly();
+        });
         
         try {
             monthlyPane = FXMLLoader.load(getClass().getResource("CalendarMonthlyPane.fxml"));

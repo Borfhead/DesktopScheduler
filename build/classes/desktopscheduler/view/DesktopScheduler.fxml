@@ -3,8 +3,10 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="595.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="desktopscheduler.view.DesktopSchedulerController">
    <children>
@@ -29,5 +31,15 @@
         </menus>
       </MenuBar>
       <BorderPane fx:id="mainPane" layoutX="15.0" layoutY="61.0" prefHeight="530.0" prefWidth="750.0" />
+      <RadioButton fx:id="monthlyToggle" layoutX="186.0" layoutY="34.0" mnemonicParsing="false" selected="true" text="Monthly">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </RadioButton>
+      <RadioButton fx:id="weeklyToggle" layoutX="287.0" layoutY="34.0" mnemonicParsing="false" text="Weekly">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </RadioButton>
    </children>
 </AnchorPane>
