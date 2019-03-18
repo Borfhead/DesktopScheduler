@@ -109,6 +109,11 @@ public class DesktopSchedulerController implements Initializable {
         } catch (IOException e) {
             System.out.println(e);
         }
+        try {
+            weeklyPane = FXMLLoader.load(getClass().getResource("CalendarWeeklyPane.fxml"));
+        } catch (IOException e) {
+            System.out.println(e);
+        }
         displayMonthly();
     }
     
