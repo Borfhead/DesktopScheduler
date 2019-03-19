@@ -107,7 +107,19 @@ public class DBDriver {
         return false;
     }
     
-    public static boolean updateAppointment(){
+    public static boolean updateAppointment(int appointmentId, int customerId, String title, 
+            String description, String location, String contact, String type, String url, String start, String end){
+        try(Connection conn = DriverManager.getConnection(URL, USER, PASS)){
+            Statement stmt = conn.createStatement();
+            String query = "UPDATE appointment SET customerId='" +customerId+ "', title='" +title+ "', description='" +description+ "', "
+                    + "location='" +location+ "', contact='" +contact+ "', type='" +type+ "', start='" +start+ "', end='" +end+ "' "
+                    + "WHERE appointmentId='" +appointmentId+ "'";
+            stmt.executeUpdate(query);
+            return true;
+        }
+        catch(SQLException e){
+            System.out.println(e);
+        }
         return false;
     }
     

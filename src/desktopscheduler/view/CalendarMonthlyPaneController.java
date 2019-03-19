@@ -110,7 +110,7 @@ public class CalendarMonthlyPaneController implements Initializable {
     
     @FXML
     private void modifyButtonPressed(){
-        System.out.println("modify");
+        
     }
     
     private void populateGrid(){

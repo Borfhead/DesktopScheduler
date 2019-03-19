@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -165,7 +166,7 @@ public class AddAppointmentController implements Initializable {
         RadioButton btn2 = (RadioButton)endToggle.getSelectedToggle();
         String startParse = startHour +":"+ startMinute +":00 "+ btn1.getText();
         String endParse = endHour +":"+ endMinute +":00 "+ btn2.getText();
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("hh:mm:ss a");
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("hh:mm:ss a", Locale.getDefault());
         try{
             start = LocalTime.parse(startParse, format);
             end = LocalTime.parse(endParse, format);
@@ -193,7 +194,7 @@ public class AddAppointmentController implements Initializable {
     private boolean hasConflict(){
         ArrayList<Appointment> otherAppts = DBDriver.getAppointmentList(apptDate);
         for(Appointment a : otherAppts){
-            DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+            DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S", Locale.getDefault());
             LocalTime tempStart = LocalDateTime.parse(a.getStart(), f).toLocalTime();
             LocalTime tempEnd = LocalDateTime.parse(a.getEnd(), f).toLocalTime();
             if(start.isBefore(tempStart) && end.isAfter(tempStart)){
