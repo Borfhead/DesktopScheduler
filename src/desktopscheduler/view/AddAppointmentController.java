@@ -5,13 +5,18 @@
  */
 package desktopscheduler.view;
 
+import desktopscheduler.model.Appointment;
 import desktopscheduler.model.Customer;
 import desktopscheduler.model.DBDriver;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,10 +24,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
@@ -32,11 +39,7 @@ import javafx.stage.Stage;
  * @author Dylan
  */
 public class AddAppointmentController implements Initializable {
-
-    
     @FXML Label dateLabel;
-    @FXML ComboBox startComboBox;
-    @FXML ComboBox endComboBox;
     @FXML TableView customerTable;
     @FXML TableColumn nameColumn;
     @FXML TextField titleField;
@@ -47,9 +50,11 @@ public class AddAppointmentController implements Initializable {
     @FXML TextField urlField;
     @FXML Button addButton;
     @FXML Button cancelButton;
+    @FXML TextField startHourField, startMinuteField, endHourField, endMinuteField;
+    @FXML RadioButton startAM, startPM, endAM, endPM;
+    private ToggleGroup startToggle, endToggle;
     private LocalDate apptDate;
-    
-    
+    private LocalTime start, end;
     
     
     public void initAppointmentDate(LocalDate apptDate){
@@ -69,6 +74,9 @@ public class AddAppointmentController implements Initializable {
         else if(selected == null){
             makeAlert("Please select a customer");
         }
+        else if(!allTimesValid()){
+            //Alerts made in allTimesValid method
+        }
         else{
             int customerId = selected.getCustomerID();
             String title = titleField.getText();
@@ -77,12 +85,9 @@ public class AddAppointmentController implements Initializable {
             String contact = contactField.getText();
             String type = typeField.getText();
             String url = urlField.getText();
-            String start = startComboBox.getSelectionModel().getSelectedItem().toString().split(" ")[0];
-            String end = endComboBox.getSelectionModel().getSelectedItem().toString().split(" ")[0];
-            start = apptDate.toString() +" "+ start +":00";
-            end = apptDate.toString() +" "+ end +":00";
-            
-            if(DBDriver.insertAppointment(customerId, title, description, location, contact, type, url, start, end)){
+            String startString = apptDate.toString() +" "+ start.toString()+ ":00";
+            String endString = apptDate.toString() +" "+ end.toString()+ ":00";
+            if(DBDriver.insertAppointment(customerId, title, description, location, contact, type, url, startString, endString)){
                 Alert a = new Alert(Alert.AlertType.INFORMATION);
                 a.setTitle("Success");
                 a.setHeaderText("Appointment Added Successfully");
@@ -108,18 +113,121 @@ public class AddAppointmentController implements Initializable {
         newAlert.showAndWait();
     }
     
+    private void addHourListener(TextField field){
+        field.textProperty().addListener((ObservableValue<? extends String> obs, String oldString, String newString) ->{
+        if(!newString.matches("\\d{0,9}")){
+            field.setText(oldString);
+            newString = oldString;
+            }
+        else if(newString.length() > 2){
+            field.setText(oldString);
+            newString = oldString;
+        }
+        try{
+            if(Integer.parseInt(newString) > 12){
+                field.setText("12");
+            }
+        }
+        catch(NumberFormatException e){
+            //Do nothing
+        }
+        });
+    }
+    
+    private void addMinuteListener(TextField field){
+        field.textProperty().addListener((ObservableValue<? extends String> obs, String oldString, String newString) ->{
+        if(!newString.matches("\\d{0,9}")){
+            field.setText(oldString);
+            newString = oldString;
+            }
+        else if(newString.length() > 2){
+            field.setText(oldString);
+            newString = oldString;
+        }
+        try{
+            if(Integer.parseInt(newString) >= 60){
+                field.setText("59");
+            }
+        }
+        catch(NumberFormatException e){
+            //Nothing happens
+        }
+        
+        });
+    }
+    
+    private boolean allTimesValid(){
+        String startHour = startHourField.getText();
+        String startMinute = startMinuteField.getText();
+        String endHour = endHourField.getText();
+        String endMinute = endMinuteField.getText();
+        RadioButton btn1 = (RadioButton)startToggle.getSelectedToggle();
+        RadioButton btn2 = (RadioButton)endToggle.getSelectedToggle();
+        String startParse = startHour +":"+ startMinute +":00 "+ btn1.getText();
+        String endParse = endHour +":"+ endMinute +":00 "+ btn2.getText();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("hh:mm:ss a");
+        try{
+            start = LocalTime.parse(startParse, format);
+            end = LocalTime.parse(endParse, format);
+            if(start.isAfter(end)){
+                makeAlert("Start time cannot be after end time");
+                return false;
+            }
+            else if(start.isBefore(LocalTime.of(8, 0)) || start.isAfter(LocalTime.of(17, 0))){
+                makeAlert("Start time is outside of business hours (8-5)");
+            }
+            else if(end.isBefore(LocalTime.of(8, 0)) || end.isAfter(LocalTime.of(17, 0))){
+                makeAlert("End time is outside of business hours (8-5)");
+            }
+            else if(!hasConflict()){
+                return true;
+            }
+        }
+        catch(Exception e){
+            makeAlert("Please enter time in hh:mm format");
+            return false;
+        }
+        return false;
+    }
+    
+    private boolean hasConflict(){
+        ArrayList<Appointment> otherAppts = DBDriver.getAppointmentList(apptDate);
+        for(Appointment a : otherAppts){
+            DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+            LocalTime tempStart = LocalDateTime.parse(a.getStart(), f).toLocalTime();
+            LocalTime tempEnd = LocalDateTime.parse(a.getEnd(), f).toLocalTime();
+            if(start.isBefore(tempStart) && end.isAfter(tempStart)){
+                makeAlert("Selected time conflicts with another appointment");
+                return true;
+            }
+            else if(start.isAfter(tempStart) && start.isBefore(tempEnd)){
+                makeAlert("Selected time conflicts with another appointment");
+                return true;
+            }
+        }
+        return false;
+    }
+    
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        startComboBox.setItems(FXCollections.observableArrayList("9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"));
-        endComboBox.setItems(FXCollections.observableArrayList("10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"));
-        startComboBox.getSelectionModel().select(0);
-        endComboBox.getSelectionModel().select(0);
-        
         customerTable.setItems(FXCollections.observableArrayList(DBDriver.getCustomerList()));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("customerName"));
+        startToggle = new ToggleGroup();
+        endToggle = new ToggleGroup();
+        startAM.setToggleGroup(startToggle);
+        startPM.setToggleGroup(startToggle);
+        endAM.setToggleGroup(endToggle);
+        endPM.setToggleGroup(endToggle);
+        startToggle.selectToggle(startAM);
+        endToggle.selectToggle(endAM);
+        
+        addHourListener(startHourField);
+        addMinuteListener(startMinuteField);
+        addHourListener(endHourField);
+        addMinuteListener(endMinuteField);
     }    
     
 }
