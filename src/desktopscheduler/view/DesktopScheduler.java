@@ -23,8 +23,8 @@ public class DesktopScheduler extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         
 //        Uncomment below to bypass login
-//        DBDriver.setCurrentUserId(1);
-//        root = FXMLLoader.load(getClass().getResource("DesktopScheduler.fxml"));
+        DBDriver.setCurrentUserId(1);
+        root = FXMLLoader.load(getClass().getResource("DesktopScheduler.fxml"));
         
         Scene scene = new Scene(root);
         

@@ -10,6 +10,7 @@ import desktopscheduler.model.DBDriver;
 import java.io.IOException;
 import java.net.URL;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -190,6 +191,21 @@ public class CalendarMonthlyPaneController implements Initializable {
         
     }
     
+    private void checkUpcomingAppts(){
+        ArrayList<Appointment> apptsToday = DBDriver.getAppointmentList(LocalDate.now());
+        DateTimeFormatter dt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S", Locale.getDefault());
+        for(Appointment a : apptsToday){
+            LocalDateTime temp = LocalDateTime.parse(a.getStart(), dt);
+            if(temp.isBefore(LocalDateTime.now().plusMinutes(16)) && temp.isAfter(LocalDateTime.now())){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("");
+                alert.setHeaderText("You have an appointment within 15 minutes");
+                alert.setContentText("");
+                alert.showAndWait();
+            }
+        }
+    }
+    
     /**
      * Initializes the controller class.
      */
@@ -235,7 +251,7 @@ public class CalendarMonthlyPaneController implements Initializable {
             }
         });
         
-        
+        checkUpcomingAppts();
     }    
     
 }
