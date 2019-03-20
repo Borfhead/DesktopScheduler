@@ -109,8 +109,24 @@ public class CalendarMonthlyPaneController implements Initializable {
 }
     
     @FXML
-    private void modifyButtonPressed(){
-        
+    private void modifyButtonPressed() throws IOException{
+        Appointment selected = (Appointment)apptTable.getSelectionModel().getSelectedItem();
+        DayInMonth apptDate = (DayInMonth)dayGroup.getSelectedToggle();
+        if(selected != null){
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("ModifyAppointment.fxml"));
+            Parent root = loader.load();
+            loader.<ModifyAppointmentController>getController().initAppointmentDate(apptDate.getDate());
+            loader.<ModifyAppointmentController>getController().initSelectedAppointment(selected);
+            DesktopSchedulerController.showNewScene(root, "Modify Appointment");
+            populateAppointments();
+        }
+        else{
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("");
+            alert.setHeaderText("Please select an appointment to modify");
+            alert.setContentText("");
+            alert.showAndWait();
+        }
     }
     
     private void populateGrid(){
