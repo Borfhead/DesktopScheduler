@@ -22,9 +22,9 @@ public class DesktopScheduler extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         
-        //Uncomment to bypass login
-        DBDriver.setCurrentUserId(1);
-        root = FXMLLoader.load(getClass().getResource("DesktopScheduler.fxml"));
+//        Uncomment below to bypass login
+//        DBDriver.setCurrentUserId(1);
+//        root = FXMLLoader.load(getClass().getResource("DesktopScheduler.fxml"));
         
         Scene scene = new Scene(root);
         

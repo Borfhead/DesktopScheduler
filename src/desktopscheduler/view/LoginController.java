@@ -12,7 +12,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import desktopscheduler.model.DBDriver;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.Locale;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -43,6 +49,19 @@ public class LoginController implements Initializable {
         String pass = passwordField.getText();
         
         if(DBDriver.authenticate(user, pass) != -1){
+            try{
+                File log = new File("log.txt");
+                log.createNewFile();
+                FileWriter write = new FileWriter(log, true);
+                BufferedWriter buff = new BufferedWriter(write);
+                PrintWriter print = new PrintWriter(buff);
+                print.println(LocalDateTime.now().toString() +" Login by: "+user);
+                print.close();
+                
+            }
+            catch(IOException e){
+                System.out.println(e);
+            }
             Parent root = FXMLLoader.load(getClass().getResource("DesktopScheduler.fxml"));
             Scene scene = userNameField.getScene();
             Stage stage = (Stage)scene.getWindow();

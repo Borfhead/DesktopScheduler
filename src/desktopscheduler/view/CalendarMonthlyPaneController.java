@@ -207,6 +207,7 @@ public class CalendarMonthlyPaneController implements Initializable {
         startColumn.setCellValueFactory(new PropertyValueFactory<>("start"));
         endColumn.setCellValueFactory(new PropertyValueFactory<>("end"));
         
+        //Lambda expression used to make adding a listener to the button simpler
         backButton.setOnAction(event -> {
             selectedMonth = selectedMonth.minusMonths(1);
             selectedDate = null;
@@ -214,6 +215,7 @@ public class CalendarMonthlyPaneController implements Initializable {
             populateGrid();
         });
         
+        //Lambda expression used to make adding a listener to the button simpler
         forwardButton.setOnAction(event -> {
             selectedMonth = selectedMonth.plusMonths(1);
             selectedDate = null;
