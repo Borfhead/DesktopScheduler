@@ -6,7 +6,12 @@
 package desktopscheduler.model;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Locale;
 /**
  *
  * @author Dylan
@@ -66,11 +71,23 @@ public class DBDriver {
     }
     
     public static boolean insertAppointment(int customerId, String title, String description, String location, String contact, String type, String url, String start, String end){
+        //Convert local time to UTC before submitting to database
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime st = LocalDateTime.parse(start, f);
+        LocalDateTime en = LocalDateTime.parse(end, f);
+        ZonedDateTime stLocal = st.atZone(ZoneId.systemDefault());
+        ZonedDateTime endLocal = en.atZone(ZoneId.systemDefault());
+        ZonedDateTime stUtc = stLocal.withZoneSameInstant(ZoneId.of("UTC"));
+        ZonedDateTime endUtc = endLocal.withZoneSameInstant(ZoneId.of("UTC"));
+        st = stUtc.toLocalDateTime();
+        en = endUtc.toLocalDateTime();
+        
+                
         try(Connection conn = DriverManager.getConnection(URL, USER, PASS)){
             Statement stmt = conn.createStatement();
             String query = "INSERT IGNORE INTO appointment(customerId, userId, title, description, location, contact, type, url, start, end) "
                     + "VALUES('"+Integer.toString(customerId)+"', '" +Integer.toString(currentUserId)+ "', '" +title+ "', '" +description+ "', '"
-                    +location+ "', '" +contact+ "', '" +type+ "', '" +url+ "', '" +start+ "', '" +end+ "')";
+                    +location+ "', '" +contact+ "', '" +type+ "', '" +url+ "', '" +f.format(st)+ "', '" +f.format(en)+ "')";
             stmt.executeUpdate(query);
             return true;
         }
@@ -109,10 +126,19 @@ public class DBDriver {
     
     public static boolean updateAppointment(int appointmentId, int customerId, String title, 
             String description, String location, String contact, String type, String url, String start, String end){
+        DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime st = LocalDateTime.parse(start, f);
+        LocalDateTime en = LocalDateTime.parse(end, f);
+        ZonedDateTime stLocal = st.atZone(ZoneId.systemDefault());
+        ZonedDateTime endLocal = en.atZone(ZoneId.systemDefault());
+        ZonedDateTime stUtc = stLocal.withZoneSameInstant(ZoneId.of("UTC"));
+        ZonedDateTime endUtc = endLocal.withZoneSameInstant(ZoneId.of("UTC"));
+        st = stUtc.toLocalDateTime();
+        en = endUtc.toLocalDateTime();
         try(Connection conn = DriverManager.getConnection(URL, USER, PASS)){
             Statement stmt = conn.createStatement();
             String query = "UPDATE appointment SET customerId='" +customerId+ "', title='" +title+ "', description='" +description+ "', "
-                    + "location='" +location+ "', contact='" +contact+ "', type='" +type+ "', start='" +start+ "', end='" +end+ "' "
+                    + "location='" +location+ "', contact='" +contact+ "', type='" +type+ "', start='" +f.format(st)+ "', end='" +f.format(en)+ "' "
                     + "WHERE appointmentId='" +appointmentId+ "'";
             stmt.executeUpdate(query);
             return true;
@@ -200,6 +226,17 @@ public class DBDriver {
             ResultSet rs = stmt.executeQuery("SELECT * FROM appointment WHERE DATE(start) ='" +day.toString()+ "'");
             
             while(rs.next()){
+                DateTimeFormatter f = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+                LocalDateTime st = LocalDateTime.parse(rs.getString("start"), f);
+                LocalDateTime en = LocalDateTime.parse(rs.getString("end"), f);
+                ZonedDateTime stUtc = st.atZone(ZoneId.of("UTC"));
+                ZonedDateTime endUtc = en.atZone(ZoneId.of("UTC"));
+                ZonedDateTime stLocal = stUtc.withZoneSameInstant(ZoneId.systemDefault());
+                ZonedDateTime endLocal = endUtc.withZoneSameInstant(ZoneId.systemDefault());
+                st = stLocal.toLocalDateTime();
+                en = endLocal.toLocalDateTime();
+                
+                
                 int apptId = Integer.parseInt(rs.getString("appointmentId"));
                 int customerId = Integer.parseInt(rs.getString("customerId"));
                 int userId = Integer.parseInt(rs.getString("userId"));
@@ -209,8 +246,8 @@ public class DBDriver {
                 String contact = rs.getString("contact");
                 String type = rs.getString("type");
                 String url = rs.getString("url");
-                String start = rs.getString("start");
-                String end = rs.getString("end");
+                String start = f.format(st);
+                String end = f.format(en);
                 
                 Appointment appt = new Appointment(apptId, customerId, userId, title, description, location, contact, type, url, start, end);
                 appointments.add(appt);
