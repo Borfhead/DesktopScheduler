@@ -223,6 +223,70 @@ public class DBDriver {
         return appointments;
     }
     
+    public static ArrayList<TypeReport> getAppointmentTypes(){
+        ArrayList<TypeReport> toReturn = new ArrayList();
+        try(Connection conn = DriverManager.getConnection(URL, USER, PASS)){
+            Statement stmt = conn.createStatement();
+            String query = "select date_format(start, '%M') as 'Month', count(distinct type) as 'Types' from appointment\n" +
+                    "group by Month(start);";
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()){
+                TypeReport temp = new TypeReport(rs.getString("Month"), rs.getString("Types"));
+                toReturn.add(temp);
+            }
+        }
+        catch(SQLException e){
+            System.out.println(e);
+        }
+        return toReturn;
+    }
+    
+    public static ArrayList<Appointment> getConsultantSchedule(){
+        ArrayList<Appointment> toReturn = new ArrayList();
+        try(Connection conn = DriverManager.getConnection(URL, USER, PASS)){
+            Statement stmt = conn.createStatement();
+            String query = "select userId, title, description, start, end from appointment\n" +
+                    "order by userId, start;";
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()){
+                Appointment temp = new Appointment();
+                temp.setUserID(Integer.parseInt(rs.getString("userId")));
+                temp.setTitle(rs.getString("title"));
+                temp.setDescription(rs.getString("description"));
+                temp.setStart(rs.getString("start"));
+                temp.setEnd(rs.getString("end"));
+                toReturn.add(temp);
+            }
+        }
+        catch(SQLException e){
+            System.out.println(e);
+        }
+        return toReturn;
+    }
+    
+    public static ArrayList<CityReport> getCityReport(){
+        ArrayList<CityReport> toReturn = new ArrayList();
+        try(Connection conn = DriverManager.getConnection(URL, USER, PASS)){
+            Statement stmt = conn.createStatement();
+            String query = "select city.city as 'City', count(*) as 'Appointments'\n" +
+                    "from (((city\n" +
+                    "	inner join address on address.cityId = city.cityId)\n" +
+                    "		inner join customer on customer.addressId = address.addressId)\n" +
+                    "			inner join appointment on appointment.customerId = customer.customerId)\n" +
+                    "group by city.city\n" +
+                    "order by 'Appointments';";
+            ResultSet rs = stmt.executeQuery(query);
+            while(rs.next()){
+                CityReport temp = new CityReport(rs.getString("City"), rs.getString("Appointments"));
+                toReturn.add(temp);
+            }
+        }
+        catch(SQLException e){
+            System.out.println(e);
+        }
+        return toReturn;
+    }
+    
     public static int getCurrentUserId(){
         return currentUserId;
     }
